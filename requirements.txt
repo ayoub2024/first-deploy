@@ -1,0 +1,6 @@
+streamlit
+opencv-python
+numpy
+Pillow
+gdown
+tensorflow==2.15.0
