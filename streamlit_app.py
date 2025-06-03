@@ -1,13 +1,20 @@
 import streamlit as st
-from tensorflow.keras.models import load_model
 import numpy as np
 import cv2
 from PIL import Image
+import gdown
+from tensorflow.keras.models import load_model
+import os
 
-# Charger le modèle
+MODEL_URL = 'https://drive.google.com/file/d/1-0uFi1cJtt_ZF5vX7CsMj1DO5MyT2WzT/view?usp=drive_link'
+MODEL_PATH = 'modele.keras'
+
 @st.cache_resource
 def load_my_model():
-    return load_model("modele.keras")  # Modifie le chemin selon l'emplacement de ton modèle
+    if not os.path.exists(MODEL_PATH):
+        with st.spinner("Téléchargement du modèle depuis Google Drive..."):
+            gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
+    return load_model(MODEL_PATH)
 
 model = load_my_model()
 
@@ -29,11 +36,8 @@ st.title("Reconnaissance de billets/pièces djiboutiens")
 uploaded_file = st.file_uploader("Choisis une image à analyser", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    # Afficher l'image uploadée
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Image chargée", use_column_width=True)
-
-    # Conversion en array pour OpenCV
     image_array = np.array(image)
     image_resized = cv2.resize(image_array, (224, 224))
     image_normalized = image_resized / 255.0
@@ -43,7 +47,6 @@ if uploaded_file is not None:
         predictions = model.predict(image_input)
         confidence_score = np.max(predictions)
         predicted_class = np.argmax(predictions)
-
         if confidence_score < 0.6:
             st.warning("Ce n'est pas un billet Djiboutien (confiance faible)")
         else:
