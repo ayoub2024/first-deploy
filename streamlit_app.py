@@ -1,6 +1,5 @@
 import streamlit as st
 import numpy as np
-import cv2
 from PIL import Image
 import gdown
 from tensorflow.keras.models import load_model
@@ -38,10 +37,9 @@ uploaded_file = st.file_uploader("Choisis une image à analyser", type=["jpg", "
 if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Image chargée", use_column_width=True)
-    image_array = np.array(image)
-    image_resized = cv2.resize(image_array, (224, 224))
-    image_normalized = image_resized / 255.0
-    image_input = np.expand_dims(image_normalized, axis=0)
+    image = image.resize((224, 224))
+    image_array = np.array(image) / 255.0
+    image_input = np.expand_dims(image_array, axis=0)
 
     if st.button("Lancer la prédiction"):
         predictions = model.predict(image_input)
