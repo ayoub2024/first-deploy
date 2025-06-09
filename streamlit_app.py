@@ -5,7 +5,14 @@ import gdown
 from tensorflow.keras.models import load_model
 import os
 
-MODEL_URL = 'https://drive.google.com/file/d/1-0uFi1cJtt_ZF5vX7CsMj1DO5MyT2WzT/view?usp=drive_link'
+# URL du modèle entraîné stocké sur Google Drive. La chaîne était
+# précédemment très longue et difficile à lire, ce qui pouvait prêter
+# à confusion. Elle est maintenant écrite sur plusieurs lignes pour
+# améliorer la lisibilité.
+MODEL_URL = (
+    "https://drive.google.com/file/d/1-0uFi1cJtt_ZF5vX7CsMj1DO5MyT2WzT/"
+    "view?usp=drive_link"
+)
 MODEL_PATH = 'modele.keras'
 
 @st.cache_resource
